@@ -8,5 +8,8 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <fileType name="SphereScript File" implementationClass="com.github.mtwango.intellijscpplugin.language.SphereScriptFileType" fieldName="INSTANCE" language="SphereScript" extensions="scp" />
+        <lang.parserDefinition language="SphereScript" implementationClass="com.github.mtwango.intellijscpplugin.language.SphereScriptParserDefinition" />
+        <lang.syntaxHighlighterFactory language="SphereScript" implementationClass="com.github.mtwango.intellijscpplugin.language.SphereScriptSyntaxHighlighterFactory" />
+        <colorSettingsPage implementation="com.github.mtwango.intellijscpplugin.language.SphereScriptColorSettingsPage" />
     </extensions>
 </idea-plugin>
