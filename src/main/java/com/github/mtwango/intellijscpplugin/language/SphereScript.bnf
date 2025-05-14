@@ -12,14 +12,15 @@
   elementTypeClass="com.github.mtwango.intellijscpplugin.language.psi.SphereScriptElementType"
   tokenTypeClass="com.github.mtwango.intellijscpplugin.language.psi.SphereScriptTokenType"
 
-  psiImplUtilClass="com.github.mtwango.intellijscpplugin.language.psi.impl.SimplePsiImplUtil"
+  psiImplUtilClass="com.github.mtwango.intellijscpplugin.language.psi.impl.SphereScriptPsiImplUtil"
 }
 
 spherescriptFile ::= item_*
 
 private item_ ::= (property|TRIGGER|COMMENT|CRLF)
 
-property ::= (KEY? SEPARATOR VALUE?) | KEY
-{
-  methods=[getKey getValue]
+property ::= (KEY? SEPARATOR VALUE?) | KEY {
+  mixin="com.github.mtwango.intellijscpplugin.language.psi.impl.SphereScriptNamedElementImpl"
+  implements="com.github.mtwango.intellijscpplugin.language.psi.SphereScriptNamedElement"
+  methods=[getKey getValue getName setName getNameIdentifier]
 }

@@ -13,7 +13,7 @@ public class SphereScriptElementFactory {
   }
 
   public static SphereScriptFile createFile(Project project, String text) {
-    String name = "dummy.SphereScript";
+    String name = "dummpy.scp";
     return (SphereScriptFile) PsiFileFactory.getInstance(project).createFileFromText(name, SphereScriptFileType.INSTANCE, text);
   }
 

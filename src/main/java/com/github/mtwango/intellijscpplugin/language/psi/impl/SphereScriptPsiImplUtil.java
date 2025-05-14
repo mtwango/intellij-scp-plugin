@@ -31,5 +31,49 @@ public class SphereScriptPsiImplUtil {
       return null;
     }
   }
+  public static String getName(SphereScriptProperty element) {
+    return getKey(element);
+  }
+
+  public static PsiElement setName(SphereScriptProperty element, String newName) {
+    ASTNode keyNode = element.getNode().findChildByType(SphereScriptTypes.KEY);
+    if (keyNode != null) {
+      SphereScriptProperty property = SphereScriptElementFactory.createProperty(element.getProject(), newName);
+      ASTNode newKeyNode = property.getFirstChild().getNode();
+      element.getNode().replaceChild(keyNode, newKeyNode);
+    }
+    return element;
+  }
+
+  public static PsiElement getNameIdentifier(SphereScriptProperty element) {
+    ASTNode keyNode = element.getNode().findChildByType(SphereScriptTypes.KEY);
+    if (keyNode != null) {
+      return keyNode.getPsi();
+    } else {
+      return null;
+    }
+  }
+
+  public static ItemPresentation getPresentation(final SphereScriptProperty element) {
+    return new ItemPresentation() {
+      @Nullable
+      @Override
+      public String getPresentableText() {
+        return element.getKey();
+      }
+
+      @Nullable
+      @Override
+      public String getLocationString() {
+        PsiFile containingFile = element.getContainingFile();
+        return containingFile == null ? null : containingFile.getName();
+      }
+
+      @Override
+      public Icon getIcon(boolean unused) {
+        return element.getIcon(0);
+      }
+    };
+  }
 
 }

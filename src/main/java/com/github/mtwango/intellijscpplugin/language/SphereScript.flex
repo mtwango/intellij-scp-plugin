@@ -10,6 +10,7 @@ import com.intellij.psi.TokenType;
 %class SphereScriptLexer
 %implements FlexLexer
 %unicode
+%caseless
 %function advance
 %type IElementType
 %eof{  return;
@@ -17,12 +18,14 @@ import com.intellij.psi.TokenType;
 
 CRLF=\R
 WHITE_SPACE=[\ \n\t\f]
-FIRST_VALUE_CHARACTER=[^@ \n\f\\] | "\\"{CRLF} | "\\".
+FIRST_VALUE_CHARACTER=[^ \n\f\\] | "\\"{CRLF} | "\\".
 VALUE_CHARACTER=[^\n\f\\] | "\\"{CRLF} | "\\".
+DEFINITION=\[(TYPEDEF|TEMPLATE|AREADEF|ITEMDEF|CHARDEF|EVENTS|FUNCTION) (.*)\]
 END_OF_LINE_COMMENT=("//")[^\r\n]*
 SEPARATOR=[=]
 KEY_CHARACTER=[^=\ \n\t\f\\] | "\\ "
-TRIGGER=(ON=@)?(
+TRIGGER_DEF=ON=@
+TRIGGER=(
 "Abort"|
 "AfterClick"|
 "Attack"|
@@ -220,12 +223,13 @@ TRIGGER=(ON=@)?(
 "Wait"
 )
 
-
 %state WAITING_VALUE
 
 %%
 
-<YYINITIAL> {TRIGGER} { yybegin(YYINITIAL); return SphereScriptTypes.TRIGGER; }
+<YYINITIAL> {DEFINITION} { yybegin(YYINITIAL); return SphereScriptTypes.TRIGGER; }
+
+<YYINITIAL> {TRIGGER_DEF}?{TRIGGER} { yybegin(YYINITIAL); return SphereScriptTypes.TRIGGER; }
 
 <YYINITIAL> {END_OF_LINE_COMMENT}                           { yybegin(YYINITIAL); return SphereScriptTypes.COMMENT; }
 
