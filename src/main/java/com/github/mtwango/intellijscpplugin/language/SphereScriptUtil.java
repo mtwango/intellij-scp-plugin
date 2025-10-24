@@ -36,7 +36,7 @@ public class SphereScriptUtil {
         SphereScriptProperty[] properties = PsiTreeUtil.getChildrenOfType(spherescriptFile, SphereScriptProperty.class);
         if (properties != null) {
           for (SphereScriptProperty property : properties) {
-            if (key.equals(property.getKey())) {
+            if (key.equals(property.getPropertyKey().toString())) {
               result.add(property);
             }
           }

@@ -15,9 +15,8 @@ final class SphereScriptColorSettingsPage implements ColorSettingsPage {
 
   private static final AttributesDescriptor[] DESCRIPTORS = new AttributesDescriptor[]{
       new AttributesDescriptor("Key", SphereScriptSyntaxHighlighter.KEYWORD),
-      new AttributesDescriptor("Separator", SphereScriptSyntaxHighlighter.SEPARATOR),
-      new AttributesDescriptor("Value", SphereScriptSyntaxHighlighter.VALUE),
-      new AttributesDescriptor("Bad value", SphereScriptSyntaxHighlighter.BAD_CHARACTER)
+      new AttributesDescriptor("Operator", SphereScriptSyntaxHighlighter.OPERATOR),
+      new AttributesDescriptor("Number", SphereScriptSyntaxHighlighter.NUMBER),
   };
 
   @Override

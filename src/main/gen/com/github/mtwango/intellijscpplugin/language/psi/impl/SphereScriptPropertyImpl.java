@@ -8,9 +8,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.github.mtwango.intellijscpplugin.language.psi.SphereScriptTypes.*;
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.github.mtwango.intellijscpplugin.language.psi.*;
 
-public class SphereScriptPropertyImpl extends SphereScriptNamedElementImpl implements SphereScriptProperty {
+public class SphereScriptPropertyImpl extends ASTWrapperPsiElement implements SphereScriptProperty {
 
   public SphereScriptPropertyImpl(@NotNull ASTNode node) {
     super(node);
@@ -27,28 +28,15 @@ public class SphereScriptPropertyImpl extends SphereScriptNamedElementImpl imple
   }
 
   @Override
-  public String getKey() {
-    return SphereScriptPsiImplUtil.getKey(this);
+  @NotNull
+  public SphereScriptPropertyKey getPropertyKey() {
+    return findNotNullChildByClass(SphereScriptPropertyKey.class);
   }
 
   @Override
-  public String getValue() {
-    return SphereScriptPsiImplUtil.getValue(this);
-  }
-
-  @Override
-  public String getName() {
-    return SphereScriptPsiImplUtil.getName(this);
-  }
-
-  @Override
-  public PsiElement setName(String newName) {
-    return SphereScriptPsiImplUtil.setName(this, newName);
-  }
-
-  @Override
-  public PsiElement getNameIdentifier() {
-    return SphereScriptPsiImplUtil.getNameIdentifier(this);
+  @NotNull
+  public SphereScriptPropertyValue getPropertyValue() {
+    return findNotNullChildByClass(SphereScriptPropertyValue.class);
   }
 
 }

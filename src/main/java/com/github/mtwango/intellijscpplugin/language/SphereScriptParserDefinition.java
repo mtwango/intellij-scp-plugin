@@ -58,6 +58,12 @@ final class SphereScriptParserDefinition implements ParserDefinition {
 
   @NotNull
   @Override
+  public TokenSet getWhitespaceTokens() {
+    return SphereScriptTokenSets.WHITESPACES;
+  }
+
+  @NotNull
+  @Override
   public PsiElement createElement(ASTNode node) {
     return SphereScriptTypes.Factory.createElement(node);
   }

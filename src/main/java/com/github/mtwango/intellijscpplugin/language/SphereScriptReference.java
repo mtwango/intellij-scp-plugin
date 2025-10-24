@@ -41,7 +41,7 @@ final class SphereScriptReference extends PsiPolyVariantReferenceBase<PsiElement
     List<SphereScriptProperty> properties = SphereScriptUtil.findProperties(project);
     List<LookupElement> variants = new ArrayList<>();
     for (SphereScriptProperty property : properties) {
-      if (property.getKey() != null && !property.getKey().isEmpty()) {
+      if (property.getPropertyKey() != null && !property.getPropertyKey().toString().isEmpty()) {
         variants.add(LookupElementBuilder
             .create(property).withIcon(SphereScriptIcons.FILE)
             .withTypeText(property.getContainingFile().getName())

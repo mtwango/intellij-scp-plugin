@@ -12,15 +12,203 @@
   elementTypeClass="com.github.mtwango.intellijscpplugin.language.psi.SphereScriptElementType"
   tokenTypeClass="com.github.mtwango.intellijscpplugin.language.psi.SphereScriptTokenType"
 
-  psiImplUtilClass="com.github.mtwango.intellijscpplugin.language.psi.impl.SphereScriptPsiImplUtil"
+  tokens=[
+    // Whitespace
+    CRLF='regexp:\r|\n|\r\n'
+    WHITE_SPACE='regexp:[ \t\f]+'
+
+    // Comments
+    COMMENT='regexp:(//[^\r\n]*)|(/\*(.|\n)*?\*/)'
+
+    // Section headers
+    SECTION_HEADER='regexp:\[[^\]\r\n]+\]'
+
+    // Keywords
+    IF='IF'
+    ELSEIF='ELSEIF'
+    ELSE='ELSE'
+    ENDIF='ENDIF'
+    WHILE='WHILE'
+    ENDWHILE='ENDWHILE'
+    FOR='FOR'
+    ENDFOR='ENDFOR'
+    FORCHARS='FORCHARS'
+    FORITEMS='FORITEMS'
+    FORCLIENTS='FORCLIENTS'
+    FORPLAYERS='FORPLAYERS'
+    RETURN='RETURN'
+    BREAK='BREAK'
+    CONTINUE='CONTINUE'
+
+    DEFNAME='DEFNAME'
+    ITEMDEF='ITEMDEF'
+    CHARDEF='CHARDEF'
+    TYPEDEF='TYPEDEF'
+    EVENTS='EVENTS'
+    FUNCTION='FUNCTION'
+    TEMPLATE='TEMPLATE'
+    AREADEF='AREADEF'
+    ROOMDEF='ROOMDEF'
+    REGIONTYPE='REGIONTYPE'
+
+    ON='ON'
+    TYPE='TYPE'
+    VALUE='VALUE'
+    CATEGORY='CATEGORY'
+    SUBSECTION='SUBSECTION'
+    DESCRIPTION='DESCRIPTION'
+    NAME='NAME'
+    ID='ID'
+
+    BUILTIN_FUNCTION='regexp:(SYSMESSAGE|SERV|SRC|NEW|NEWITEM|NEWDUPE|TRYSRC|TRYSRV|EVAL|BOUNCE)'
+    TRIGGER='regexp:@[A-Za-z]+'
+
+    // Variables
+    VARIABLE_START='<'
+    VARIABLE_END='>'
+    VARIABLE_CONTENT='regexp:[^<>\r\n]+'
+
+    // Operators
+    EQUALS='='
+    COMMA=','
+    DOT='.'
+    SEMICOLON=';'
+
+    LE='<='
+    GE='>='
+    EQ='=='
+    NE='!='
+    LT='<'
+    GT='>'
+
+    AND='&&'
+    OR='||'
+    NOT='!'
+
+    PLUS='+'
+    MINUS='-'
+    MULT='*'
+    DIV='/'
+    MOD='%'
+
+    // Parentheses and brackets
+    LPAREN='('
+    RPAREN=')'
+    LBRACE='{'
+    RBRACE='}'
+    LBRACKET='['
+    RBRACKET=']'
+
+    // Literals
+    STRING='regexp:\"([^\"\\\r\n]|\\.)*\"?'
+    HEX_NUMBER='regexp:0[xX][0-9a-fA-F]+'
+    FLOAT_NUMBER='regexp:[0-9]+\.[0-9]+'
+    NUMBER='regexp:[0-9]+'
+    IDENTIFIER='regexp:[a-zA-Z_][a-zA-Z0-9_]*'
+  ]
 }
 
-spherescriptFile ::= item_*
+// Root rule
+scpFile ::= item*
 
-private item_ ::= (property|TRIGGER|COMMENT|CRLF)
+private item ::= section | property | commentRule | CRLF
 
-property ::= (KEY? SEPARATOR VALUE?) | KEY {
-  mixin="com.github.mtwango.intellijscpplugin.language.psi.impl.SphereScriptNamedElementImpl"
-  implements="com.github.mtwango.intellijscpplugin.language.psi.SphereScriptNamedElement"
-  methods=[getKey getValue getName setName getNameIdentifier]
-}
+// Section definitions
+section ::= section_headerRule section_body?
+
+section_headerRule ::= SECTION_HEADER
+
+section_body ::= (property | statement | commentRule | CRLF)*
+
+// Properties
+property ::= property_key EQUALS property_value
+
+property_key ::= IDENTIFIER | keyword_as_property
+
+keyword_as_property ::= TYPE | VALUE | CATEGORY | SUBSECTION |
+                       DESCRIPTION | NAME | ID | ON | DEFNAME
+
+property_value ::= expression
+
+// Statements
+statement ::= if_statement
+           | while_statement
+           | for_statement
+           | return_statement
+           | break_statement
+           | continue_statement
+           | function_call
+           | assignment
+
+// Control structures
+if_statement ::= IF expression CRLF
+                statement*
+                (ELSEIF expression CRLF statement*)*
+                (ELSE CRLF statement*)?
+                ENDIF
+
+while_statement ::= WHILE expression CRLF
+                   statement*
+                   ENDWHILE
+
+for_statement ::= (FOR | FORCHARS | FORITEMS | FORCLIENTS | FORPLAYERS)
+                 expression? CRLF
+                 statement*
+                 ENDFOR
+
+return_statement ::= RETURN expression?
+
+break_statement ::= BREAK
+
+continue_statement ::= CONTINUE
+
+// Assignment
+assignment ::= (IDENTIFIER | variable | property_reference) EQUALS expression
+
+// Function calls
+function_call ::= (BUILTIN_FUNCTION | IDENTIFIER | property_reference)
+                 (expression | argument_list)?
+
+argument_list ::= expression (COMMA expression)*
+
+// Expressions
+expression ::= logical_or_expression
+
+logical_or_expression ::= logical_and_expression (OR logical_and_expression)*
+
+logical_and_expression ::= comparison_expression (AND comparison_expression)*
+
+comparison_expression ::= additive_expression
+                         ((LT | GT | LE | GE | EQ | NE) additive_expression)?
+
+additive_expression ::= multiplicative_expression
+                       ((PLUS | MINUS) multiplicative_expression)*
+
+multiplicative_expression ::= unary_expression
+                             ((MULT | DIV | MOD) unary_expression)*
+
+unary_expression ::= (NOT | MINUS)? primary_expression
+
+primary_expression ::= literal
+                    | variable
+                    | property_reference
+                    | IDENTIFIER
+                    | function_call
+                    | LPAREN expression RPAREN
+
+// Variables
+variable ::= VARIABLE_START variable_path VARIABLE_END
+
+variable_path ::= VARIABLE_CONTENT (DOT VARIABLE_CONTENT)*
+
+// Property references
+property_reference ::= IDENTIFIER (DOT IDENTIFIER)+
+
+// Literals
+literal ::= STRING
+         | HEX_NUMBER
+         | FLOAT_NUMBER
+         | NUMBER
+
+// Comments
+commentRule ::= COMMENT

@@ -1,0 +1,13 @@
+[EVENTS e_test_events]
+ON=@Create
+    SRC.SYSMESSAGE Item created: <NAME>
+    ATTR=<EVAL <ATTR> | attr_newbie>
+    RETURN 0
+
+ON=@DClick
+    IF (<SRC.DISTANCE> > 3)
+        SRC.SYSMESSAGE Too far away
+        RETURN 1
+    ENDIF
+    SRC.SYSMESSAGE You clicked <NAME>
+    RETURN 0

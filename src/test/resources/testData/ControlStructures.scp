@@ -1,0 +1,14 @@
+[FUNCTION test_function]
+IF (<SRC.ACCOUNT.PLEVEL> > 2)
+    SYSMESSAGE You are an admin
+ELSEIF (<SRC.ACCOUNT.PLEVEL> == 2)
+    SYSMESSAGE You are a moderator
+ELSE
+    SYSMESSAGE You are a player
+ENDIF
+
+WHILE (<VAR.counter> < 10)
+    VAR.counter += 1
+ENDWHILE
+
+RETURN 1

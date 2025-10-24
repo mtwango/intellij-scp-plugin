@@ -1,0 +1,8 @@
+[ITEMDEF i_gold]
+ID=0xeed
+NAME=Gold Coins
+TYPE=t_gold
+VALUE=1
+CATEGORY=Provisions - Miscellaneous
+SUBSECTION=Miscellaneous
+DESCRIPTION=Gold Coins

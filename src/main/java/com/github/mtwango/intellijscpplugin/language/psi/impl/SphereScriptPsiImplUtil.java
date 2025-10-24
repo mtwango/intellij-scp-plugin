@@ -6,7 +6,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.github.mtwango.intellijscpplugin.language.psi.SphereScriptElementFactory;
 import com.github.mtwango.intellijscpplugin.language.psi.SphereScriptProperty;
+import com.github.mtwango.intellijscpplugin.language.psi.SphereScriptPropertyKey;
 import com.github.mtwango.intellijscpplugin.language.psi.SphereScriptTypes;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -14,7 +16,7 @@ import javax.swing.*;
 public class SphereScriptPsiImplUtil {
 
   public static String getKey(SphereScriptProperty element) {
-    ASTNode keyNode = element.getNode().findChildByType(SphereScriptTypes.KEY);
+    ASTNode keyNode = element.getNode().findChildByType(SphereScriptTypes.IDENTIFIER);
     if (keyNode != null) {
       // IMPORTANT: Convert embedded escaped spaces to SphereScript spaces
       return keyNode.getText().replaceAll("\\\\ ", " ");
@@ -36,7 +38,7 @@ public class SphereScriptPsiImplUtil {
   }
 
   public static PsiElement setName(SphereScriptProperty element, String newName) {
-    ASTNode keyNode = element.getNode().findChildByType(SphereScriptTypes.KEY);
+    ASTNode keyNode = element.getNode().findChildByType(SphereScriptTypes.IDENTIFIER);
     if (keyNode != null) {
       SphereScriptProperty property = SphereScriptElementFactory.createProperty(element.getProject(), newName);
       ASTNode newKeyNode = property.getFirstChild().getNode();
@@ -46,7 +48,7 @@ public class SphereScriptPsiImplUtil {
   }
 
   public static PsiElement getNameIdentifier(SphereScriptProperty element) {
-    ASTNode keyNode = element.getNode().findChildByType(SphereScriptTypes.KEY);
+    ASTNode keyNode = element.getNode().findChildByType(SphereScriptTypes.IDENTIFIER);
     if (keyNode != null) {
       return keyNode.getPsi();
     } else {
@@ -56,10 +58,9 @@ public class SphereScriptPsiImplUtil {
 
   public static ItemPresentation getPresentation(final SphereScriptProperty element) {
     return new ItemPresentation() {
-      @Nullable
       @Override
-      public String getPresentableText() {
-        return element.getKey();
+      public @Nullable String getPresentableText() {
+        return element.getPropertyKey().toString();
       }
 
       @Nullable

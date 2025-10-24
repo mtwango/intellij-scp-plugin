@@ -1,0 +1,2 @@
+SphereScript File
+  PsiComment(SphereScriptTokenType.COMMENT)('// @todo')
