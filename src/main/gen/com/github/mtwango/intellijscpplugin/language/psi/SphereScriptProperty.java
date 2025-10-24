@@ -1,0 +1,20 @@
+// This is a generated file. Not intended for manual editing.
+package com.github.mtwango.intellijscpplugin.language.psi;
+
+import java.util.List;
+import org.jetbrains.annotations.*;
+import com.intellij.psi.PsiElement;
+
+public interface SphereScriptProperty extends SphereScriptNamedElement {
+
+  String getKey();
+
+  String getValue();
+
+  String getName();
+
+  PsiElement setName(String newName);
+
+  PsiElement getNameIdentifier();
+
+}
